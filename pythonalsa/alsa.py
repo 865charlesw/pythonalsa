@@ -55,6 +55,28 @@ class Mixer:
     index: int = 0
 
     @property
+    def has_volume_control(self) -> bool:
+        """
+        Check if mixer element has playback volume control.
+
+        Returns:
+            True if playback volume control exists, False otherwise
+        """
+        with self._make_alsa_elem() as elem:
+            return bool(_lib.snd_mixer_selem_has_playback_volume(elem))
+
+    @property
+    def has_mute_control(self) -> bool:
+        """
+        Check if mixer element has playback switch (mute) control.
+
+        Returns:
+            True if playback switch control exists, False otherwise
+        """
+        with self._make_alsa_elem() as elem:
+            return bool(_lib.snd_mixer_selem_has_playback_switch(elem))
+
+    @property
     def volume_range(self) -> tuple[Optional[int], Optional[int]]:
         """
         Get volume range (min, max).
@@ -62,9 +84,9 @@ class Mixer:
         Returns:
             Tuple of (min, max) volume levels, or (None, None) if element doesn't support playback volume
         """
+        if not self.has_volume_control:
+            return None, None
         with self._make_alsa_elem() as elem:
-            if not _lib.snd_mixer_selem_has_playback_volume(elem):
-                return None, None
             pmin = c_long()
             pmax = c_long()
             _lib.snd_mixer_selem_get_playback_volume_range(
@@ -105,10 +127,10 @@ class Mixer:
         Raises:
             ALSAError: If unable to get volume
         """
-        with self._make_alsa_elem() as elem:
-            if not _lib.snd_mixer_selem_has_playback_volume(elem):
-                return None
+        if not self.has_volume_control:
+            return None
 
+        with self._make_alsa_elem() as elem:
             value = c_long()
             _check_error(
                 _lib.snd_mixer_selem_get_playback_volume(elem, 0, byref(value)),
@@ -127,11 +149,11 @@ class Mixer:
         Raises:
             ALSAError: If unable to set volume or element doesn't support playback volume
         """
+        if not self.has_volume_control:
+            raise ALSAError(
+                f"Mixer element '{self.name}' doesn't support playback volume"
+            )
         with self._make_alsa_elem() as elem:
-            if not _lib.snd_mixer_selem_has_playback_volume(elem):
-                raise ALSAError(
-                    f"Mixer element '{self.name}' doesn't support playback volume"
-                )
             _check_error(
                 _lib.snd_mixer_selem_set_playback_volume_all(elem, value),
                 "Failed to set playback volume",
@@ -192,9 +214,9 @@ class Mixer:
         Raises:
             ALSAError: If unable to get mute state
         """
+        if not self.has_mute_control:
+            return None
         with self._make_alsa_elem() as elem:
-            if not _lib.snd_mixer_selem_has_playback_switch(elem):
-                return None
             value = c_int()
             _check_error(
                 _lib.snd_mixer_selem_get_playback_switch(elem, 0, byref(value)),
@@ -214,11 +236,11 @@ class Mixer:
         Raises:
             ALSAError: If unable to set mute state or element doesn't support mute
         """
+        if not self.has_mute_control:
+            raise ALSAError(
+                f"Mixer element '{self.name}' doesn't support playback switch"
+            )
         with self._make_alsa_elem() as elem:
-            if not _lib.snd_mixer_selem_has_playback_switch(elem):
-                raise ALSAError(
-                    f"Mixer element '{self.name}' doesn't support playback switch"
-                )
             _check_error(
                 _lib.snd_mixer_selem_set_playback_switch_all(elem, int(not value)),
                 "Failed to set playback switch",
