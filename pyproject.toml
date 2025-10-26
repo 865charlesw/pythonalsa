@@ -1,0 +1,32 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "pythonalsa"
+version = "0.1.0"
+authors = [
+    { name = "Charles", email = "hello@865charlesw.com" }
+]
+description = "ALSA C library bindings using ctypes for Python"
+readme = "README.md"
+requires-python = ">=3.9"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Sound/Audio",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+keywords = ["alsa", "audio", "mixer", "sound", "linux"]
+license = "GPL-3.0-or-later"
+
+[project.urls]
+Homepage = "https://github.com/865charlesw/pythonalsa"
+Issues = "https://github.com/865charlesw/pythonalsa/issues"
