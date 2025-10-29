@@ -13,7 +13,7 @@ from ctypes import (
 from ctypes.util import find_library
 from dataclasses import dataclass
 from functools import cached_property
-from typing import Iterator, Optional
+from typing import Iterator
 
 _lib = CDLL(find_library("asound"))
 
@@ -77,7 +77,7 @@ class Mixer:
             return bool(_lib.snd_mixer_selem_has_playback_switch(elem))
 
     @property
-    def volume_range(self) -> tuple[Optional[int], Optional[int]]:
+    def volume_range(self) -> tuple[int | None, int | None]:
         """
         Get volume range (min, max).
 
@@ -117,7 +117,7 @@ class Mixer:
             yield elem
 
     @property
-    def volume(self) -> Optional[int]:
+    def volume(self) -> int | None:
         """
         Get current raw volume level.
 
@@ -160,7 +160,7 @@ class Mixer:
             )
 
     @property
-    def volume_percent(self) -> Optional[int]:
+    def volume_percent(self) -> int | None:
         """
         Get current volume as percentage (0-100).
 
@@ -204,7 +204,7 @@ class Mixer:
         self.volume = raw_vol
 
     @property
-    def muted(self) -> Optional[bool]:
+    def muted(self) -> bool | None:
         """
         Get current mute state.
 
@@ -250,7 +250,7 @@ class Mixer:
 class Card:
     """Represents an ALSA sound card."""
 
-    def __init__(self, index: Optional[int] = None):
+    def __init__(self, index: int | None = None):
         """
         Create a Card instance.
 
