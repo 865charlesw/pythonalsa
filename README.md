@@ -64,7 +64,7 @@ mixer.muted = False
 
 ## API Reference
 
-See docstrings for `Card`, `Mixer`, `list_cards`, and `ALSAError`.
+See docstrings for `Card`, `Mixer`, `iter_cards`, and `ALSAError`.
 
 ## License
 
