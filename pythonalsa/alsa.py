@@ -325,9 +325,9 @@ class Card:
         finally:
             _lib.snd_mixer_close(handle)
 
-    def list_mixers(self) -> Iterator[Mixer]:
+    def iter_mixers(self) -> Iterator[Mixer]:
         """
-        List all mixer elements for this card.
+        Iterate over all mixer elements for this card.
 
         Yields:
             Mixer objects for this card.
@@ -366,9 +366,9 @@ class Card:
         return mixer
 
 
-def list_cards() -> Iterator[Card]:
+def iter_cards() -> Iterator[Card]:
     """
-    List all available ALSA sound cards.
+    Iterate over all available ALSA sound cards.
 
     Yields:
         Card objects representing available sound cards.
